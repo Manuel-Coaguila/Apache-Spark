@@ -1,0 +1,115 @@
+# ============================================================================
+# PYTHON
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+
+# ============================================================================
+# ENVIRONMENT & CONFIGURATION
+# ============================================================================
+.env
+.env.local
+.env.*.local
+conf/env/
+*.key
+*.pem
+
+# ============================================================================
+# IDE & EDITOR
+# ============================================================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================================
+# LOGS & RUNTIME DATA
+# ============================================================================
+logs/
+spark-projects/*/logs/
+*.log
+*.log.*
+
+# ============================================================================
+# SPARK & DATA ARTIFACTS
+# ============================================================================
+# Event logs de Spark
+logs/events/
+logs/history/
+
+# Archivos de datos procesados (OUTPUT)
+spark-projects/*/files/output/
+data/processed/
+data/temp/
+
+# Metadata de Spark
+.spark-metadata/
+metastore_db/
+*.warehouse/
+
+# ============================================================================
+# JAR FILES (ejecutables compilados)
+# ============================================================================
+# Nota: extra-jars/ se incluye en el repo, pero ignorar JARs compilados localmente
+*.jar
+!extra-jars/*.jar
+
+# ============================================================================
+# JUPYTER & NOTEBOOKS
+# ============================================================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ============================================================================
+# DOCKER
+# ============================================================================
+# Nota: Dockerfile y docker-compose.yaml sí se versionan
+.dockerignore
+docker-sync.yml
+
+# ============================================================================
+# DEPENDENCY LOCK FILES (Opcional - descomenta si usas)
+# ============================================================================
+# poetry.lock
+# Pipfile.lock
+# uv.lock
+
+# ============================================================================
+# MISC
+# ============================================================================
+.gradle/
+.m2/
+target/
+*.orig

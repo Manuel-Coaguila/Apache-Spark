@@ -1,0 +1,6 @@
+sqlserver:
+  host: "localhost"
+  port: 1433
+  username: "sa"
+  password: "Manuel1999!"
+  database: "DWH"
