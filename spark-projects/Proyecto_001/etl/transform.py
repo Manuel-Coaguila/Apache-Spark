@@ -1,62 +1,53 @@
 import logging
 from pyspark.sql import DataFrame
-from pyspark.sql import functions as F
-
 from functions.functions import (
-    clean_tildes_column,
-    clean_numeric_int_column,
-    normalize_allowed_values_column,
     normalize_text_column,
+    normalize_categorical_column,
+    normalize_positive_int_column,
 )
 
 logger = logging.getLogger("etl.transform")
 
+#Education,JoiningYear,City,PaymentTier,Age,Gender,EverBenched,ExperienceInCurrentDomain,LeaveOrNot
+
+COMMON_INVALID_INPUTS = ["N/A", "Unknown", "Error", "ERROR", "null", "NULL"]
+
+# Configuración declarativa — escalable: agregar columnas es agregar entradas aquí,
+# no escribir más código.
+TEXT_COLUMNS = ["Education", "City", "EverBenched"]
+POSITIVE_INT_COLUMNS = ["JoiningYear", "PaymentTier", "Age", "ExperienceInCurrentDomain"]
+CATEGORICAL_COLUMNS = {
+    "Gender": ["Female", "Male"],
+    "LeaveOrNot": ["1", "0"],
+}
+
 
 def run(df: DataFrame) -> DataFrame:
     try:
-        logger.debug("Aplicando transformaciones al DataFrame")
-
-        df_transformed = df.select(
-            F.current_date().alias("fecha_actual"),
-            normalize_text_column(
-                "Education",
-                invalid_values=["NULL", "null", "None", "none"],
-                invalid_value="ERROR",
-            ),
-            normalize_allowed_values_column("LeaveOrNot", ["0", "1"], invalid_value="ERROR"),
-            normalize_text_column(
-                "JoiningYear",
-                invalid_values=["NULL", "null", "None", "none"],
-                invalid_value="ERROR",
-            ),
-            clean_tildes_column("City"),
-            normalize_text_column(
-                "PaymentTier",
-                invalid_values=["NULL", "null", "None", "none"],
-                invalid_value="ERROR",
-            ),
-            clean_numeric_int_column("Age"),
-            normalize_text_column(
-                "Gender",
-                invalid_values=["NULL", "null", "None", "none"],
-                invalid_value="ERROR",
-            ),
-            normalize_text_column(
-                "EverBenched",
-                invalid_values=["NULL", "null", "None", "none"],
-                invalid_value="ERROR",
-            ),
-            normalize_text_column(
-                "ExperienceInCurrentDomain",
-                invalid_values=["NULL", "null", "None", "none"],
-                invalid_value="ERROR",
-            ),
+        logger.debug(
+            "Aplicando transformaciones: %d texto, %d numéricas, %d categóricas",
+            len(TEXT_COLUMNS), len(POSITIVE_INT_COLUMNS), len(CATEGORICAL_COLUMNS),
         )
 
-        logger.info("Transformación aplicada correctamente")
-        return df_transformed
+        exprs = []
+        exprs += [
+            normalize_text_column(c, COMMON_INVALID_INPUTS, strip_accents=True)
+            for c in TEXT_COLUMNS
+        ]
+        exprs += [
+            normalize_positive_int_column(c, COMMON_INVALID_INPUTS)
+            for c in POSITIVE_INT_COLUMNS
+        ]
+        exprs += [
+            normalize_categorical_column(c, allowed, COMMON_INVALID_INPUTS)
+            for c, allowed in CATEGORICAL_COLUMNS.items()
+        ]
 
-    except Exception as exc:
-        logger.exception("Error al ejecutar transform.run; %s", exc)
+        df_clean = df.select(*exprs)
+
+        logger.info("Transformación aplicada correctamente sobre %d columnas", len(exprs))
+        return df_clean
+
+    except Exception:
+        logger.exception("Error al ejecutar transform.run")
         raise
-
