@@ -18,12 +18,9 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 .pytest_cache/
 .coverage
 .coverage.*
@@ -32,22 +29,38 @@ htmlcov/
 .hypothesis/
 
 # ============================================================================
-# ENVIRONMENT & CONFIGURATION
+# ENTORNO Y CONFIGURACIÓN SENSIBLE
 # ============================================================================
+# Solo se versiona .env.staging (template de ejemplo)
+# .env.dev y .env.prod contienen credenciales reales
+/conf/env/.env.prod
+/conf/env/.env.dev
 .env
 .env.local
 .env.*.local
 *.key
 *.pem
 
-# Solo trackear .env.staging (template de ejemplo)
-# .env.dev y .env.prod tienen credenciales reales, no se versionan
-conf/env/.env.dev
-conf/env/.env.prod
-.env.prod
-.env.dev
 # ============================================================================
-# IDE & EDITOR
+# LOGS DE SPARK (EVENT LOGS)
+# ============================================================================
+/logs/events/eventlog*
+/logs/history/*
+
+# ============================================================================
+# LOGS DE APLICACIÓN
+# ============================================================================
+/logs/*
+*.log
+*.log.*
+
+# ============================================================================
+# OUTPUTS GENERADOS POR ETL
+# ============================================================================
+/projects/*/files/output/*
+
+# ============================================================================
+# IDE / EDITOR
 # ============================================================================
 .vscode/
 .idea/
@@ -60,50 +73,17 @@ conf/env/.env.prod
 Thumbs.db
 
 # ============================================================================
-# LOGS & RUNTIME DATA
-# ============================================================================
-# Ignorar logs de aplicación
-*.log
-*.log.*
-
-# Ignorar contenido de logs/ raíz (event logs de Spark)
-logs/*
-!logs/events/
-!logs/history/
-!logs/**/.gitkeep
-
-# Ignorar contenido de events/ (event logs), solo trackear .gitkeep
-logs/events/*
-!logs/events/.gitkeep
-
-# Ignorar logs de cada proyecto
-projects/*/logs/*
-!projects/*/logs/.gitkeep
-
-# ============================================================================
-# SPARK & DATA ARTIFACTS
-# ============================================================================
-# Ignorar outputs generados por ETL
-projects/*/files/output/*
-!projects/*/files/output/.gitkeep
-!projects/*/files/output/*/.gitkeep
-
-# Metadata de Spark
-.spark-metadata/
-metastore_db/
-*.warehouse/
-
-# ============================================================================
-# JUPYTER & NOTEBOOKS
-# ============================================================================
-.ipynb_checkpoints/
-*.ipynb
-
-# ============================================================================
 # DOCKER
 # ============================================================================
 .dockerignore
 docker-sync.yml
+
+# ============================================================================
+# METADATA DE SPARK
+# ============================================================================
+.spark-metadata/
+metastore_db/
+*.warehouse/
 
 # ============================================================================
 # MISC
