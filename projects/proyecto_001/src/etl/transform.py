@@ -22,7 +22,7 @@ CATEGORICAL_COLUMNS = {
 
 def run(df: DataFrame) -> DataFrame:
     try:
-        logger.debug(
+        logger.info(
             "Aplicando transformaciones: %d texto, %d numéricas, %d categóricas",
             len(TEXT_COLUMNS), len(POSITIVE_INT_COLUMNS), len(CATEGORICAL_COLUMNS),
         )

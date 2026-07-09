@@ -2,13 +2,13 @@ import logging
 import logging.config
 import yaml
 
+# Inicializar logging ANTES de cualquier import que use logging
+with open("/opt/spark/projects/proyecto_001/conf/logging.yaml", "r") as f:
+    config = yaml.safe_load(f.read())
+    logging.config.dictConfig(config)
+
 from src.spark_sesion.spark_sesion import get_spark_session
 from src.etl import extract, transform, load
-
-# Inicializar logging desde logging.yaml
-with open("/opt/spark/projects/proyecto_001/conf/logging.yaml", "r") as f:
-    config = yaml.safe_load(f.read()) # Se convierte en diccionario
-    logging.config.dictConfig(config)
 
 logger = logging.getLogger("etl.main")
 

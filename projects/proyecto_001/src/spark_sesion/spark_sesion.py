@@ -16,17 +16,7 @@ def get_spark_session():
             .config("spark.driver.cores", int(spark_cfg["driver_cores"]))
             .getOrCreate()
         )
-        print("################################################################")
-        print("################################################################")
-        print("Spark session created successfully.")
-        print("################################################################")
-        print("################################################################")
         return spark
     except Exception as e:
-        print("########################### ERROR ##############################")
-        print("################################################################")
         print(f"Error al crear la sesión de Spark: {e}")
-        print("Verifica que las variables de entorno estén configuradas correctamente.")
-        print("################################################################")
-        print("################################################################")
         raise
