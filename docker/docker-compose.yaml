@@ -19,17 +19,11 @@ services:
     user: "1000:1000"
     volumes:
       - ../shared:/opt/spark/shared
-      - ../spark-projects:/opt/spark/spark-projects
-      - ../extra-jars:/opt/spark/extra-jars
+      - ../projects:/opt/spark/projects
+      - ../extra_jars:/opt/spark/extra_jars
       - ../logs:/opt/spark/logs
-      #- ../logs:/opt/spark/logs
-      #- ../data:/opt/spark/data
     env_file:
       - ../conf/env/.env.prod
-    environment:
-      SPARK_MASTER_HOST: ${PROD_SPARK_MASTER_HOST:-spark-master}
-      SPARK_MASTER_CORES: ${PROD_SPARK_MASTER_CORES:-2}
-      SPARK_MASTER_MEMORY: ${PROD_SPARK_MASTER_MEMORY:-2g}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
@@ -58,15 +52,11 @@ services:
     user: "1000:1000"
     volumes:
       - ../shared:/opt/spark/shared
-      - ../spark-projects:/opt/spark/spark-projects
-      - ../extra-jars:/opt/spark/extra-jars
+      - ../projects:/opt/spark/projects
+      - ../extra_jars:/opt/spark/extra_jars
       - ../logs:/opt/spark/logs
     env_file:
       - ../conf/env/.env.prod
-    environment:
-      SPARK_MASTER_HOST: ${PROD_SPARK_MASTER_HOST:-spark-master}
-      SPARK_WORKER_CORES: ${PROD_SPARK_WORKER_CORES:-2}
-      SPARK_WORKER_MEMORY: ${PROD_SPARK_WORKER_MEMORY:-2g}
     healthcheck:
       test: ["CMD", "bash", "-c", "pgrep -f 'org.apache.spark.deploy.worker.Worker' >/dev/null"]
       interval: 30s

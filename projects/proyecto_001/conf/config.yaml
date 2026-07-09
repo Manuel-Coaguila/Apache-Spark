@@ -1,0 +1,26 @@
+# ======================
+# Project 001 - Config
+# ======================
+# Los valores sensibles (password, username) se toman de variables de entorno.
+# En producción se inyectan por Docker/Kubernetes/Secrets Manager.
+
+# Spark Configuration
+spark:
+  app_name: "PROJECT_001"
+  executor_memory: "512m"
+  executor_cores: "1"
+  driver_memory: "512m"
+  driver_cores: "1"
+  jars: "/opt/spark/jars/mssql-jdbc-12.6.3.jre8.jar"
+
+# SQL Server Connection
+sqlserver:
+  host: "sql_server_2019"
+  port: 1433
+  database: "DWH"
+  driver: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+
+# Paths
+paths:
+  home: "/opt/spark/projects/proyecto_001"
+  extract_file: "/opt/spark/projects/proyecto_001/files/input/Employee.csv"

@@ -12,9 +12,9 @@ USER root
 RUN addgroup --gid ${GID} ${SPARK_GROUP} && \
     useradd -m -u ${UID} -g ${SPARK_GROUP} ${SPARK_USER} && \
     mkdir -p ${SPARK_HOME}/shared \
-             ${SPARK_HOME}/extra-jars \
-             ${SPARK_HOME}/spark-projects \
-             ${SPARK_HOME}/data \
+             ${SPARK_HOME}/extra_jars \
+             ${SPARK_HOME}/projects \
+             #${SPARK_HOME}/data \
              ${SPARK_HOME}/conf \
              ${SPARK_HOME}/output \
              ${SPARK_HOME}/work \
@@ -22,9 +22,9 @@ RUN addgroup --gid ${GID} ${SPARK_GROUP} && \
              ${SPARK_HOME}/logs/history && \
     chown -R ${SPARK_USER}:${SPARK_GROUP} \
                 ${SPARK_HOME}/shared \
-                ${SPARK_HOME}/extra-jars \
-                ${SPARK_HOME}/spark-projects \
-                ${SPARK_HOME}/data \
+                ${SPARK_HOME}/extra_jars \
+                ${SPARK_HOME}/projects \
+                #${SPARK_HOME}/data \
                 ${SPARK_HOME}/conf \
                 ${SPARK_HOME}/output \
                 ${SPARK_HOME}/work \
@@ -36,6 +36,7 @@ RUN addgroup --gid ${GID} ${SPARK_GROUP} && \
 COPY --chown=${SPARK_USER}:${SPARK_GROUP} ./conf/logging.yaml ${SPARK_HOME}/conf/logging.yaml
 COPY --chown=${SPARK_USER}:${SPARK_GROUP} ./conf/spark-defaults.conf ${SPARK_HOME}/conf/spark-defaults.conf
 COPY --chown=${SPARK_USER}:${SPARK_GROUP} ./docker/requirements.txt ${SPARK_HOME}/requirements.txt
+COPY --chown=${SPARK_USER}:${SPARK_GROUP} ./extra_jars/ ${SPARK_HOME}/jars/
 
 # Definir directorio de configuración de Spark
 ENV SPARK_CONF_DIR=${SPARK_HOME}/conf
