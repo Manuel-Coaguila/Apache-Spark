@@ -39,6 +39,11 @@ htmlcov/
 .env.*.local
 *.key
 *.pem
+
+# Solo trackear .env.staging (template de ejemplo)
+# .env.dev y .env.prod tienen credenciales reales, no se versionan
+conf/env/.env.dev
+conf/env/.env.prod
 .env.prod
 .env.dev
 # ============================================================================
