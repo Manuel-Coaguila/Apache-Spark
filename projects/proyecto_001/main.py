@@ -8,13 +8,12 @@ with open("/opt/spark/projects/proyecto_001/conf/logging.yaml", "r") as f:
     logging.config.dictConfig(config)
 
 from src.spark_sesion.spark_sesion import get_spark_session
-from src.etl import extract, transform, load
+from src.etl import extract, transform, load, validation
 
 logger = logging.getLogger("etl.main")
 
 def main():
     try:
-
         logger.info("####################################################")
         logger.info("####################################################")
 
@@ -24,24 +23,30 @@ def main():
         logger.info("Sesión Spark inicializada")
 
         df = extract.run(spark)
-        logger.info("Datos extraídos correctamente")
+        if df is None:
+            logger.error("Error en extracción, proceso continuará sin cargar datos")
+            return
 
         df_transformed = transform.run(df)
-        logger.info("Transformación aplicada")
+        if df_transformed is None:
+            logger.error("Error en transformación, proceso continuará sin cargar datos")
+            return
 
-        load.run(df_transformed)
-        logger.info("Datos cargados en destino (CSV, Parquet, SQL Server)")
+        df_validation = validation.run(df_transformed)
+        if df_validation is None:
+            logger.error("Error en validación, proceso continuará sin cargar datos")
+            return
 
-        logger.info("ETL finalizado con éxito")
+        load.run(df_validation)
+        logger.info("Datos cargados en destino")
+
+        logger.info("ETL finalizado")
 
     except Exception as e:
-
         logger.info("####################################################")
         logger.info("####################################################")
-
         logger.error("Error crítico en ETL: %s", e, exc_info=True)
 
-        raise
 
 if __name__ == "__main__":
     main()

@@ -20,7 +20,7 @@ CATEGORICAL_COLUMNS = {
 }
 
 
-def run(df: DataFrame) -> DataFrame:
+def run(df: DataFrame) -> DataFrame | None:
     try:
         logger.info(
             "Aplicando transformaciones: %d texto, %d numéricas, %d categóricas",

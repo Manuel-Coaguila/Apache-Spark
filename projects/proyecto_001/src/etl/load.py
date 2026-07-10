@@ -1,3 +1,4 @@
+from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 from src.spark_config.config import config
 
@@ -5,7 +6,7 @@ sqlserver_cfg = config["sqlserver"]
 paths_cfg = config["paths"]
 
 
-def run(df):
+def run(df: DataFrame):
     # Ruta de salida para CSV
     output_csv = f"{paths_cfg['home']}/files/output/Employee_with_date_csv"
     df.write.csv(output_csv, header=True, mode="overwrite")
@@ -32,3 +33,4 @@ def run(df):
     # )
 
     print("DataFrame cargado en tabla SQL Server: Employee_with_date")
+    return

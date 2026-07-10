@@ -7,7 +7,7 @@ logger = logging.getLogger("etl.extract")
 paths_cfg = config["paths"]
 
 
-def run(spark: SparkSession) -> DataFrame:
+def run(spark: SparkSession) -> DataFrame | None:
     try:
         logger.info("Cargando archivo")
         path_file = paths_cfg["extract_file"]

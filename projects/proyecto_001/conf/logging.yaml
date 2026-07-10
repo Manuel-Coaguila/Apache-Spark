@@ -38,6 +38,11 @@ loggers:
     handlers: [console, file]
     propagate: no
 
+  etl.validation:
+    level: INFO
+    handlers: [console, file]  
+    propagate: no
+
   etl.load:
     level: INFO
     handlers: [console, file]

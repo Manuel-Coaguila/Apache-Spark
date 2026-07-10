@@ -4,8 +4,8 @@
 services:
   spark-master:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     image: apache_spark:01
     container_name: spark-master
     restart: unless-stopped
@@ -18,12 +18,11 @@ services:
       - tesis-net
     user: "1000:1000"
     volumes:
-      - ../shared:/opt/spark/shared
-      - ../projects:/opt/spark/projects
-      - ../extra_jars:/opt/spark/extra_jars
-      - ../logs:/opt/spark/logs
+      - ./projects:/opt/spark/projects
+      #- ../extra_jars:/opt/spark/extra_jars
+      - ./logs:/opt/spark/logs
     env_file:
-      - ../conf/env/.env.prod
+      - ./conf/env/.env.prod
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
@@ -38,8 +37,8 @@ services:
 
   spark-worker:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     image: apache_spark:01
     container_name: spark-worker
     restart: unless-stopped
@@ -51,12 +50,11 @@ services:
       - tesis-net
     user: "1000:1000"
     volumes:
-      - ../shared:/opt/spark/shared
-      - ../projects:/opt/spark/projects
-      - ../extra_jars:/opt/spark/extra_jars
-      - ../logs:/opt/spark/logs
+      - ./projects:/opt/spark/projects
+      #- ../extra_jars:/opt/spark/extra_jars
+      - ./logs:/opt/spark/logs
     env_file:
-      - ../conf/env/.env.prod
+      - ./conf/env/.env.prod
     healthcheck:
       test: ["CMD", "bash", "-c", "pgrep -f 'org.apache.spark.deploy.worker.Worker' >/dev/null"]
       interval: 30s
