@@ -1,7 +1,7 @@
 import logging
 from pyspark.sql import SparkSession, DataFrame
 from src.schemas.schemas import get_employee_schema
-from src.spark_config.config import config
+from src.config.config import config
 
 logger = logging.getLogger("etl.extract")
 paths_cfg = config["paths"]

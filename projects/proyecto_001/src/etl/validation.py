@@ -4,6 +4,7 @@ import logging
 
 logger = logging.getLogger("etl.validation")
 
+
 def run(df: DataFrame) -> DataFrame | None:
     try:
         # Validar si el DF está vacío
@@ -17,14 +18,16 @@ def run(df: DataFrame) -> DataFrame | None:
         if total_registros == total_registros_unicos:
             logger.info("No existen registros duplicados")
         else:
-            logger.warning(f"Se encontraron {total_registros - total_registros_unicos} duplicados")
+            logger.warning(
+                f"Se encontraron {total_registros - total_registros_unicos} duplicados")
             return None
 
         # Validar nulos y valores inválidos
         null_exprs = [
             F.count(
                 F.when(
-                    (F.col(c).isNull()) | (F.col(c).isin("null","NULL","NA","N/A")),
+                    (F.col(c).isNull()) | (F.col(c).isin(
+                        "null", "NULL", "NA", "N/A")),
                     c
                 )
             ).alias(f"{c}_null")
@@ -43,10 +46,12 @@ def run(df: DataFrame) -> DataFrame | None:
 
         for col_name in df.columns:
             if df_nulls[f"{col_name}_null"] > 0:
-                logger.warning(f"Columna {col_name} tiene {df_nulls[f'{col_name}_null']} valores nulos/NA")
+                logger.warning(
+                    f"Columna {col_name} tiene {df_nulls[f'{col_name}_null']} valores nulos/NA")
                 return None
             if df_errors[f"{col_name}_error"] > 0:
-                logger.warning(f"Columna {col_name} tiene {df_errors[f'{col_name}_error']} valores ERROR")
+                logger.warning(
+                    f"Columna {col_name} tiene {df_errors[f'{col_name}_error']} valores ERROR")
                 return None
 
         logger.info("Validaciones completadas: DataFrame válido")

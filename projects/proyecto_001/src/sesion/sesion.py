@@ -1,5 +1,9 @@
+import logging
 from pyspark.sql import SparkSession
-from src.spark_config.config import config
+from src.config.config import config
+
+
+logger = logging.getLogger("etl.sesion")
 
 
 def get_spark_session():
@@ -16,6 +20,7 @@ def get_spark_session():
             .config("spark.driver.cores", int(spark_cfg["driver_cores"]))
             .getOrCreate()
         )
+        logger.info("Sesión Spark inicializada")
         return spark
     except Exception as e:
         print(f"Error al crear la sesión de Spark: {e}")

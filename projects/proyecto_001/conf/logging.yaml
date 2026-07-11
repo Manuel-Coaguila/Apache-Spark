@@ -18,11 +18,16 @@ handlers:
     filename: /opt/spark/projects/proyecto_001/logs/etl.log
 
 loggers:
-  etl.spark_config:
+  etl.config:
     level: INFO
     handlers: [console, file]
     propagate: no
-    
+  
+  etl.session:
+    level: INFO
+    handlers: [console, file]
+    propagate: no
+
   etl.main:
     level: INFO
     handlers: [console, file]

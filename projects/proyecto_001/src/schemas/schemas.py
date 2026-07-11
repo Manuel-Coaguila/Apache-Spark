@@ -1,5 +1,6 @@
 from pyspark.sql.types import StructType, StructField, StringType
 
+
 def get_employee_schema() -> StructType:
     return StructType(
         [
