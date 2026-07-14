@@ -1,9 +1,10 @@
 import logging
 import yaml
 import logging.config
+import os
 
-# Inicializar logging ANTES de cualquier import que use logging
-with open("/opt/spark/projects/proyecto_001/conf/logging.yaml", "r") as f:
+path_logging = os.getenv("P001_PATH_LOGGING") # or "/opt/spark/projects/proyecto_001/conf/logging.yaml"
+with open(path_logging, "r") as f:
     config = yaml.safe_load(f.read())
     logging.config.dictConfig(config)
 
@@ -25,18 +26,21 @@ def main():
 
         df = extract.run(spark)
         if df is None:
+            spark.stop()
             logger.error(
                 "Error en extracción, proceso continuará sin cargar datos")
             return
 
         df_transformed = transform.run(df)
         if df_transformed is None:
+            spark.stop()
             logger.error(
                 "Error en transformación, proceso continuará sin cargar datos")
             return
 
         df_validation = validation.run(df_transformed)
         if df_validation is None:
+            spark.stop()
             logger.error(
                 "Error en validación, proceso continuará sin cargar datos")
             return
@@ -49,6 +53,7 @@ def main():
         logger.info("####################################################")
         logger.info("####################################################")
         logger.error("Error crítico en ETL: %s", e, exc_info=True)
+        spark.stop()
 
 
 if __name__ == "__main__":

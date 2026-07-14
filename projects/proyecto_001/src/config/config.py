@@ -15,6 +15,7 @@ try:
     # Agregar credenciales desde variables de entorno (inyectadas por docker-compose)
     config["sqlserver"]["username"] = os.getenv("SQLSERVER_USER_P001")
     config["sqlserver"]["password"] = os.getenv("SQLSERVER_PASSWORD_P001")
+    config["paths"]["logging"] = os.getenv("P001_PATH_LOGGING")
 
 #    logger.info("Variables cargadas correctamente")
 

@@ -24,3 +24,4 @@ sqlserver:
 paths:
   home: "/opt/spark/projects/proyecto_001"
   extract_file: "/opt/spark/projects/proyecto_001/files/input/Employee.csv"
+  logging: "/opt/spark/projects/proyecto_001/conf/config.yaml"

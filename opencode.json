@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "Dockerfile",
+    "docker-compose.yaml",
+    "projects/proyecto_001/main.py",
+    "conf/spark-defaults.conf"
+  ]
+}

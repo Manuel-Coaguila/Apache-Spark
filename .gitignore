@@ -35,6 +35,7 @@ htmlcov/
 # .env.dev y .env.prod contienen credenciales reales
 /conf/env/.env.prod
 /conf/env/.env.dev
+.env.prod
 .env
 .env.local
 .env.*.local

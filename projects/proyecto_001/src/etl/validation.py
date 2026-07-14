@@ -8,7 +8,7 @@ logger = logging.getLogger("etl.validation")
 def run(df: DataFrame) -> DataFrame | None:
     try:
         # Validar si el DF está vacío
-        if df.rdd.isEmpty():
+        if df.isEmpty():
             logger.error("El DataFrame está vacío")
             return None
 

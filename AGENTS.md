@@ -12,11 +12,11 @@ apache_spark/
 ├── Dockerfile              # FROM apache/spark:4.0.3-scala2.13-java17-python3-ubuntu
 ├── docker-compose.yaml     # master (:7077, :8081) + worker, net tesis-net (external)
 ├── requirements.txt        # PyYAML==6.0.2
+├── .env                    # Credenciales + config (gitignored)
 ├── conf/
 │   ├── logging.yaml        # EMPTY (root level, unused)
 │   ├── spark-defaults.conf # Spark tuning + auth config
 │   └── env/
-│       ├── .env.prod       # Credenciales + config (gitignored)
 │       ├── .env.dev        # EMPTY
 │       └── .env.staging    # EMPTY
 ├── extra_jars/             # JARs copiados a /opt/spark/jars/ en build
@@ -27,8 +27,8 @@ apache_spark/
 │       │   ├── etl/        # extract.py → transform.py → validation.py → load.py
 │       │   ├── functions/  # Capas de limpieza: clean, flag, normalize_*
 │       │   ├── schemas/    # Tipos: StructType con todos StringType
-│       │   ├── spark_config/  # config.py (lee config.yaml + env vars)
-│       │   └── spark_sesion/  # get_spark_session()
+│       │   ├── config/  # config.py (lee config.yaml + env vars)
+│       │   └── sesion/  # get_spark_session()
 │       ├── conf/           # config.yaml + logging.yaml (proyecto-level)
 │       ├── files/input/    # CSV fuente (Employee.csv)
 │       ├── files/output/   # CSV + Parquet generados (gitignored)
@@ -41,8 +41,8 @@ apache_spark/
 ## Commands
 ```bash
 # Build and start
-docker compose build
-docker compose up -d
+docker compose --env-file .env build --no-cache
+docker compose --env-file .env up -d
 
 # Run ETL (inside container)
 docker exec -it spark-master spark-submit \
@@ -56,7 +56,7 @@ docker exec -it spark-master pyspark --master spark://spark-master:7077
 ## Critical Quirks
 
 ### 1. Import order matters
-`src/spark_config/config.py` loads YAML at **module level**. It must be imported **after** logging is configured. The entrypoint in `main.py` initializes logging before any `from src.etl import extract` (which transitively imports `config.py`). Adding new modules that import `config.py` at module level must follow this pattern.
+`src/config/config.py` loads YAML at **module level**. It must be imported **after** logging is configured. The entrypoint in `main.py` initializes logging before any `from src.etl import extract` (which transitively imports `config.py`). Adding new modules that import `config.py` at module level must follow this pattern.
 
 ### 2. All paths are Docker paths
 - Config path: `/opt/spark/projects/proyecto_001/conf/config.yaml`
@@ -66,7 +66,7 @@ docker exec -it spark-master pyspark --master spark://spark-master:7077
 Never use relative or host paths in Python code.
 
 ### 3. Secrets via env vars
-Non-sensitive config in `conf/config.yaml`, credentials injected via `docker-compose.yaml` → `.env.prod` → `os.getenv()` in `config.py`. The `.env.prod` file is gitignored. Agent must not hardcode secrets.
+Non-sensitive config in `conf/config.yaml`, credentials injected via `docker-compose.yaml` → `.env` → `os.getenv()` in `config.py`. The `.env` file is gitignored. Agent must not hardcode secrets.
 
 ### 4. No test runner configured
 `tests/` dir contains empty stubs. No `pytest.ini`, `pyproject.toml`, or `setup.cfg`. If adding tests, need to choose a runner (pytest expected) and add to `requirements.txt`.
@@ -89,8 +89,27 @@ No build shortcuts. All operations are manual `docker compose` + `docker exec`.
 ### 10. Docker build context
 Dockerfile uses `--chown=${SPARK_USER}:${SPARK_GROUP}` for all COPY instructions. The user inside container is `uspark` (UID/GID 1000:1000, configurable via build args).
 
+## Architecture — 3 containers
+This project is part of a 3-container architecture simulating a production environment:
+
+| Container | Hostname | Description |
+|-----------|----------|-------------|
+| **SQL Server** | `sql_server_2019` | Database (separate project, its own compose) |
+| **Spark** | `spark-master` / `spark-worker` | ETL engine (this project) |
+| **Airflow** | `airflow` | Orchestrator (separate project, its own compose) |
+
+All connected via external network `tesis-net`.
+
+## Startup Order
+Containers must start in this order due to dependencies:
+
+1. **SQL Server** — `docker compose up -d` (in its own project)
+2. **Apache Spark** — `docker compose --env-file .env up -d`
+3. **Apache Airflow** — `docker compose up -d` (in its own project)
+
 ## Network
 - External Docker network `tesis-net` must exist: `docker network create tesis-net`
-- Master at `spark://spark-master:7077`
-- Worker connects via `spark://spark-master:7077`
-- SQL Server expected at hostname `sql_server_2019` (separate container on same network)
+- Spark master at `spark://spark-master:7077`
+- Spark worker connects via `spark://spark-master:7077`
+- SQL Server at `sql_server_2019:1433`
+- Airflow connects to Spark via `spark-submit` pointing to `spark://spark-master:7077`

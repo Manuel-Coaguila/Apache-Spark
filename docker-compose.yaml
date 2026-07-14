@@ -12,17 +12,17 @@ services:
     command: >
       /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     ports:
-      - "7077:7077"
-      - "8081:8080"
+      - ${PROD_PORT_LOCAL_WORKER}:${PROD_PORT_WORKER}
+      - ${PROD_PORT_LOCAL_MASTER}:${PROD_PORT_MASTER}
     networks:
       - tesis-net
-    user: "1000:1000"
+    user: ${PROD_USER_SPARK}:${PROD_GROUP_SPARK}
     volumes:
       - ./projects:/opt/spark/projects
       #- ../extra_jars:/opt/spark/extra_jars
       - ./logs:/opt/spark/logs
     env_file:
-      - ./conf/env/.env.prod
+      - .env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
@@ -48,13 +48,13 @@ services:
       - spark-master
     networks:
       - tesis-net
-    user: "1000:1000"
+    user: ${PROD_USER_SPARK}:${PROD_USER_SPARK}
     volumes:
       - ./projects:/opt/spark/projects
       #- ../extra_jars:/opt/spark/extra_jars
       - ./logs:/opt/spark/logs
     env_file:
-      - ./conf/env/.env.prod
+      - .env
     healthcheck:
       test: ["CMD", "bash", "-c", "pgrep -f 'org.apache.spark.deploy.worker.Worker' >/dev/null"]
       interval: 30s
