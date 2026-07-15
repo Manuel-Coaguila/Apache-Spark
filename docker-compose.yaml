@@ -13,7 +13,7 @@ services:
       /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     ports:
       - ${PROD_PORT_LOCAL_WORKER}:${PROD_PORT_WORKER}
-      - ${PROD_PORT_LOCAL_MASTER}:${PROD_PORT_MASTER}
+      - ${PROD_PORT_LOCAL_MASTER_UI}:${PROD_PORT_MASTER_UI}
     networks:
       - tesis-net
     user: ${PROD_USER_SPARK}:${PROD_GROUP_SPARK}

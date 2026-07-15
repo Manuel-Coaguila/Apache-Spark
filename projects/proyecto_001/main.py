@@ -3,7 +3,8 @@ import yaml
 import logging.config
 import os
 
-path_logging = os.getenv("P001_PATH_LOGGING") # or "/opt/spark/projects/proyecto_001/conf/logging.yaml"
+path_logging = os.getenv("PATH_LOGGING_P001") #or "/opt/spark/projects/proyecto_001/conf/logging.yaml"
+
 with open(path_logging, "r") as f:
     config = yaml.safe_load(f.read())
     logging.config.dictConfig(config)
