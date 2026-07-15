@@ -1,0 +1,28 @@
+spark.master spark://spark-master:7077
+
+spark.driver.memory 512m
+spark.executor.memory 512m
+spark.executor.cores 1
+spark.executor.instances 1
+
+spark.sql.shuffle.partitions 4
+
+spark.dynamicAllocation.enabled true
+spark.dynamicAllocation.minExecutors 1
+spark.dynamicAllocation.maxExecutors 2
+
+spark.eventLog.enabled true
+spark.eventLog.dir /opt/spark/logs/events
+spark.history.fs.logDirectory /opt/spark/logs/history
+
+spark.authenticate true
+spark.network.crypto.enabled true
+spark.ssl.enabled false
+spark.authenticate.secret ${SPARK_AUTH_SECRET}
+
+spark.serializer org.apache.spark.serializer.KryoSerializer
+spark.sql.autoBroadcastJoinThreshold 10MB
+spark.sql.adaptive.enabled true
+
+
+spark.hadoop.fs.permissions.umask-mode 022

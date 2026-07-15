@@ -31,10 +31,9 @@ htmlcov/
 # ============================================================================
 # ENTORNO Y CONFIGURACIÓN SENSIBLE
 # ============================================================================
-# Solo se versiona .env.staging (template de ejemplo)
-# .env.dev y .env.prod contienen credenciales reales
 /conf/env/.env.prod
 /conf/env/.env.dev
+/conf/env/.env.staging
 .env.prod
 .env
 .env.local
